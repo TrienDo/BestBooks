@@ -50,9 +50,9 @@ userModule.controller('login3', function($rootScope, $scope, $http, $location, $
 });
 
 userModule.controller('home', function($scope, $http) {
-	$http.get('/resource').success(function(data) {
-		$scope.greeting = data;
-	});
+	//$http.get('/resource').success(function(data) {
+	//	$scope.greeting = data;
+	//});
 });
 
 userModule.controller('register', function($scope, $http, $route) {
@@ -71,7 +71,7 @@ userModule.controller('register', function($scope, $http, $route) {
 	};		
 });
 
-userModule.controller('login', function($scope, $http, $route) {
+userModule.controller('login', function($scope, $http, $route,$location) {
 	$scope.login = function() {
 	   var loginObj = {
 			email: $scope.user.email,
@@ -81,7 +81,23 @@ userModule.controller('login', function($scope, $http, $route) {
 	   $http.post('/BestBooks/api/v1/login',loginObj).success(function(data) {
 			$location.path("/");
 			$scope.error = data.error;
-			$scope.messageContent = data.message;			
+			$scope.messageContent = data.username;	
+            if(!$scope.error)
+            {
+                $location.path("/");
+                //$("#userName").text($scope.messageContent);
+                //Add submenu
+                var content = '<li class="dropdown">'
+                            + '<a class="dropdown-toggle" data-toggle="dropdown" href="#">' + $scope.messageContent + '<span class="caret"></span></a>'
+                            +    '<ul class="dropdown-menu">'
+                            +        '<li><a href="#">Your details</a></li>'
+                            +        '<li><a href="#">Change password</a></li>'
+                            +        '<li><a href="#">Log out</a></li>'                        
+                            +    '</ul>'
+                            + '</li>';
+                $("#userProfile").empty();
+                $("#userProfile").append(content);
+            }		
 	   }); 
 	};	
 });
